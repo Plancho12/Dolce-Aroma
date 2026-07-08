@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dolce Aroma Repostería Profesional</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            primary: '#b76e79',
+            cream: '#fdf6ee',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: #fdf6ee; }
+    h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+    .cart-badge { animation: pop 0.2s ease; }
+    @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
+    .drawer-overlay { backdrop-filter: blur(4px); }
+    .star-filled { color: #f59e0b; }
+    .star-empty { color: #d1d5db; }
+    #replit-dev-banner { display: none !important; }
+    .toast { animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from{transform:translateY(100px);opacity:0} to{transform:translateY(0);opacity:1} }
+    .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+    .ig-gradient { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+    input:focus, textarea:focus { outline: 2px solid #b76e79; outline-offset: 2px; border-color: transparent; }
+    select:focus { outline: 2px solid #b76e79; }
+  </style>
+</head>
+<body class="text-gray-800">
+
+<!-- ════════════════════════════════════════
+     NAVBAR
+════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-cream/80 backdrop-blur-md border-b border-gray-200">
+  <div class="max-w-6xl mx-auto px-4 md:px-8 flex items-center justify-between h-16">
+    <a href="#" class="font-serif font-bold text-xl text-gray-900">Dolce Aroma</a>
+    <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
+      <a href="#menu" class="hover:text-primary transition-colors">Menú</a>
+      <a href="#promociones" class="hover:text-primary transition-colors">Promociones</a>
+      <a href="#resenas" class="hover:text-primary transition-colors">Reseñas</a>
+      <a href="#contacto" class="hover:text-primary transition-colors">Contacto</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button onclick="toggleCart()" class="relative flex items-center gap-2 bg-white border border-gray-200 rounded-full px-4 py-2 text-sm font-medium shadow-sm hover:shadow transition-shadow">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        Hacer Pedido
+        <span id="cart-badge" class="hidden bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">0</span>
+      </button>
+      <!-- Admin button (hidden icon on navbar brand) -->
+      <button onclick="openAdminModal()" title="Admin" class="w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-600 transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ════════════════════════════════════════
+     HERO
+════════════════════════════════════════ -->
+<section id="inicio" class="relative min-h-screen flex items-center pt-16 overflow-hidden">
+  <div class="absolute inset-0 bg-cover bg-center" style="background-image:url('https://images.unsplash.com/photo-1517433670267-08bbd4be890f?w=1600&q=80');">
+    <div class="absolute inset-0 bg-cream/70"></div>
+  </div>
+  <div class="relative max-w-6xl mx-auto px-4 md:px-8 py-24">
+    <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-4 border border-primary/30 bg-primary/5 rounded-full inline-block px-4 py-1">Dolce Aroma Repostería Profesional</p>
+    <h1 class="text-5xl md:text-7xl font-serif font-bold text-gray-900 leading-tight mb-6">
+      El arte de crear<br/>momentos dulces.
+    </h1>
+    <p class="text-lg text-gray-600 max-w-xl mb-10">Descubre nuestra selección de pasteles y postres artesanales, horneados diariamente con amor e ingredientes de la más alta calidad.</p>
+    <div class="flex flex-wrap gap-4">
+      <a href="https://wa.me/50254895074" target="_blank" class="flex items-center gap-2 bg-primary text-white rounded-full px-6 py-3 font-semibold hover:bg-pink-700 transition-colors shadow-lg">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Ordenar por WhatsApp
+      </a>
+      <a href="#menu" class="flex items-center gap-2 bg-white border border-gray-300 rounded-full px-6 py-3 font-semibold text-gray-700 hover:border-primary hover:text-primary transition-colors">
+        Ver Menú
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     MENÚ
+════════════════════════════════════════ -->
+<section id="menu" class="py-20 bg-white">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <div class="text-center mb-14 fade-in">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Nuestros Postres</p>
+      <h2 class="text-4xl font-serif font-bold text-gray-900">Menú Artesanal</h2>
+      <p class="text-gray-500 mt-3 max-w-xl mx-auto">Cada pieza elaborada con ingredientes selectos y mucho amor.</p>
+    </div>
+    <div id="menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     PROMOCIONES
+════════════════════════════════════════ -->
+<section id="promociones" class="py-20 bg-cream">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <div class="text-center mb-14 fade-in">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Ofertas Especiales</p>
+      <h2 class="text-4xl font-serif font-bold text-gray-900">Promociones</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="promo-grid"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     RESEÑAS
+════════════════════════════════════════ -->
+<section id="resenas" class="py-20 bg-white">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <div class="text-center mb-14 fade-in">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Lo que dicen</p>
+      <h2 class="text-4xl font-serif font-bold text-gray-900">Reseñas</h2>
+    </div>
+
+    <!-- Formulario nueva reseña -->
+    <div class="max-w-xl mx-auto bg-cream rounded-2xl p-6 mb-10 fade-in">
+      <h3 class="font-serif text-xl font-semibold mb-4">Deja tu reseña</h3>
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tu nombre</label>
+        <input id="review-name" type="text" placeholder="María García" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-white text-sm" />
+      </div>
+      <div class="mb-3">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Calificación</label>
+        <div id="star-input" class="flex gap-1">
+          <button onclick="setRating(1)" class="star-btn text-2xl star-empty" data-v="1">★</button>
+          <button onclick="setRating(2)" class="star-btn text-2xl star-empty" data-v="2">★</button>
+          <button onclick="setRating(3)" class="star-btn text-2xl star-empty" data-v="3">★</button>
+          <button onclick="setRating(4)" class="star-btn text-2xl star-empty" data-v="4">★</button>
+          <button onclick="setRating(5)" class="star-btn text-2xl star-empty" data-v="5">★</button>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Comentario</label>
+        <textarea id="review-comment" rows="3" placeholder="Cuéntanos tu experiencia..." class="w-full border border-gray-200 rounded-xl px-4 py-2.5 bg-white text-sm resize-none"></textarea>
+      </div>
+      <button onclick="submitReview()" class="w-full bg-primary text-white rounded-xl py-2.5 font-semibold hover:bg-pink-700 transition-colors">Enviar reseña</button>
+    </div>
+
+    <!-- Lista de reseñas -->
+    <div id="reviews-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    <p id="no-reviews" class="text-center text-gray-400 hidden">Sé el primero en dejar una reseña.</p>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     CONTACTO
+════════════════════════════════════════ -->
+<section id="contacto" class="py-20 bg-cream">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <div class="text-center mb-14 fade-in">
+      <p class="text-xs font-semibold uppercase tracking-widest text-primary mb-2">Encuéntranos</p>
+      <h2 class="text-4xl font-serif font-bold text-gray-900">Contacto</h2>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl mx-auto text-center">
+      <div class="fade-in">
+        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b76e79" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 12.72a19.79 19.79 0 01-3.07-8.67A2 2 0 012 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.36 6.36l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+        </div>
+        <h4 class="font-semibold mb-1">WhatsApp</h4>
+        <a href="https://wa.me/50254895074" target="_blank" class="text-primary text-sm hover:underline">+502 5489 5074</a>
+      </div>
+      <div class="fade-in">
+        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b76e79" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <h4 class="font-semibold mb-1">Ubicación</h4>
+        <p class="text-gray-500 text-sm">Guatemala, Ciudad de Guatemala</p>
+      </div>
+      <div class="fade-in">
+        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-3">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b76e79" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h4 class="font-semibold mb-1">Horario</h4>
+        <p class="text-gray-500 text-sm">Lun – Sáb: 8:00 – 18:00</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════
+     SHARE BAR
+════════════════════════════════════════ -->
+<div class="bg-gray-900 border-t border-white/10 py-8">
+  <div class="max-w-6xl mx-auto px-4 md:px-8">
+    <p class="text-white/40 text-xs font-semibold uppercase tracking-widest text-center mb-5">Comparte con tus amigos</p>
+    <div class="flex gap-3 overflow-x-auto pb-1 justify-start md:justify-center no-scrollbar">
+      <a id="share-facebook" href="#" target="_blank" rel="noopener"
+        class="flex-shrink-0 flex flex-col items-center gap-2 bg-[#1877F2] text-white rounded-2xl px-6 py-4 w-28 hover:scale-105 active:scale-95 transition-transform">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.886v2.267h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+        <span class="text-xs font-semibold">Facebook</span>
+      </a>
+      <a id="share-whatsapp" href="#" target="_blank" rel="noopener"
+        class="flex-shrink-0 flex flex-col items-center gap-2 bg-[#25D366] text-white rounded-2xl px-6 py-4 w-28 hover:scale-105 active:scale-95 transition-transform">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        <span class="text-xs font-semibold">WhatsApp</span>
+      </a>
+      <button onclick="shareInstagram()"
+        class="flex-shrink-0 flex flex-col items-center gap-2 ig-gradient text-white rounded-2xl px-6 py-4 w-28 hover:scale-105 active:scale-95 transition-transform">
+        <svg id="ig-icon" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        <span id="ig-label" class="text-xs font-semibold">Instagram</span>
+      </button>
+      <button onclick="copyLink()"
+        class="flex-shrink-0 flex flex-col items-center gap-2 bg-white/10 hover:bg-white/20 text-white rounded-2xl px-6 py-4 w-28 hover:scale-105 active:scale-95 transition-transform">
+        <svg id="copy-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        <span id="copy-label" class="text-xs font-semibold">Enlace</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="bg-gray-900 border-t border-white/5 py-8 text-center">
+  <p class="font-serif text-white text-lg font-semibold mb-1">Dolce Aroma</p>
+  <p class="text-white/40 text-sm">Repostería Profesional · Guatemala</p>
+  <p class="text-white/20 text-xs mt-4">© 2025 Dolce Aroma. Hecho con ♥</p>
+</footer>
+
+<!-- ════════════════════════════════════════
+     FLOATING WHATSAPP
+════════════════════════════════════════ -->
+<a href="https://wa.me/50254895074" target="_blank"
+  class="fixed bottom-6 right-6 z-40 w-14 h-14 bg-[#25D366] text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-transform">
+  <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
+
+<!-- ════════════════════════════════════════
+     CART DRAWER
+════════════════════════════════════════ -->
+<div id="cart-overlay" class="fixed inset-0 z-50 hidden">
+  <div class="absolute inset-0 bg-black/40 drawer-overlay" onclick="toggleCart()"></div>
+  <div class="absolute right-0 top-0 bottom-0 w-full max-w-sm bg-white shadow-2xl flex flex-col">
+    <div class="flex items-center justify-between p-5 border-b">
+      <h3 class="font-serif text-xl font-bold">Tu Pedido</h3>
+      <button onclick="toggleCart()" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 transition-colors">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div id="cart-items" class="flex-1 overflow-y-auto p-5 space-y-4"></div>
+    <div id="cart-empty" class="flex-1 flex flex-col items-center justify-center text-gray-400 hidden">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="mb-3"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <p class="text-sm">Tu carrito está vacío</p>
+    </div>
+    <div id="cart-footer" class="p-5 border-t hidden">
+      <div class="flex justify-between font-semibold text-lg mb-4">
+        <span>Total</span>
+        <span id="cart-total" class="font-sans">Q 0.00</span>
+      </div>
+      <button onclick="orderViaWhatsApp()" class="w-full bg-[#25D366] text-white rounded-xl py-3 font-semibold flex items-center justify-center gap-2 hover:bg-green-600 transition-colors">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Pedir por WhatsApp
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     ADMIN MODAL
+════════════════════════════════════════ -->
+<div id="admin-overlay" class="fixed inset-0 z-50 hidden flex items-center justify-center bg-black/40 backdrop-blur-sm">
+  <div class="bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl mx-4">
+    <div id="admin-login-view">
+      <h3 class="font-serif text-2xl font-bold mb-1 text-center">Acceso Admin</h3>
+      <p class="text-gray-500 text-sm text-center mb-6">Ingresa tus credenciales</p>
+      <div class="mb-4">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
+        <input id="admin-user" type="text" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm" placeholder="Usuario" />
+      </div>
+      <div class="mb-6">
+        <label class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+        <input id="admin-pass" type="password" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm" placeholder="••••••••" onkeydown="if(event.key==='Enter')doAdminLogin()" />
+      </div>
+      <p id="admin-error" class="text-red-500 text-sm text-center mb-3 hidden">Credenciales incorrectas</p>
+      <button onclick="doAdminLogin()" class="w-full bg-primary text-white rounded-xl py-2.5 font-semibold hover:bg-pink-700 transition-colors">Ingresar</button>
+      <button onclick="closeAdminModal()" class="w-full mt-3 text-gray-500 text-sm hover:text-gray-700">Cancelar</button>
+    </div>
+    <div id="admin-logged-view" class="hidden text-center">
+      <div class="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#b76e79" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      </div>
+      <h3 class="font-serif text-xl font-bold mb-2">Modo Admin activo</h3>
+      <p class="text-gray-500 text-sm mb-6">Puedes eliminar reseñas.</p>
+      <button onclick="doAdminLogout()" class="w-full border border-gray-200 text-gray-700 rounded-xl py-2.5 font-semibold hover:bg-gray-50 transition-colors">Cerrar sesión</button>
+      <button onclick="closeAdminModal()" class="w-full mt-2 text-gray-500 text-sm hover:text-gray-700">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[100] hidden">
+  <div class="bg-gray-900 text-white text-sm font-medium px-5 py-3 rounded-full shadow-xl toast">
+    <span id="toast-msg"></span>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════ -->
+<script>
+// ─── DATA ───────────────────────────────
+const MENU = [
+  { name:"Pastel de Chocolate", price:85, emoji:"🍫", desc:"Esponjoso bizcocho de cacao con ganache de chocolate belga." },
+  { name:"Cheesecake de Fresa", price:75, emoji:"🍓", desc:"Base crujiente de galleta con cremoso queso y compota de fresa." },
+  { name:"Tiramisú Artesanal", price:80, emoji:"☕", desc:"Clásico italiano con mascarpone, espresso y cacao en polvo." },
+  { name:"Pastel Red Velvet", price:90, emoji:"❤️", desc:"Terciopelo rojo con frosting de queso crema y vainilla." },
+  { name:"Macaron Francés", price:35, emoji:"🌸", desc:"Delicadas conchas de almendra con ganache de frambuesa." },
+  { name:"Fondant de Chocolate", price:70, emoji:"🍮", desc:"Coulant tierno de chocolate oscuro con corazón líquido." },
+  { name:"Creme Brûlée", price:65, emoji:"🔥", desc:"Crema de vainilla francesa con costra caramelizada crujiente." },
+  { name:"Cupcakes Surtidos", price:45, emoji:"🧁", desc:"Mini pasteles decorados, disponibles en varios sabores." },
+];
+
+const PROMOS = [
+  { title:"Caja de 12 Macarons", badge:"⭐ Más Popular", desc:"Surtido de sabores: vainilla, frambuesa, pistache y más.", price:"Q 360", original:"Q 420", img:"🌸" },
+  { title:"Pastel de Cumpleaños", badge:"🎂 Personalizado", desc:"Diseño a tu gusto con mensaje y decoración incluida.", price:"Q 250", original:"Q 300", img:"🎂" },
+  { title:"Box de Postres", badge:"🎁 Box Dulce", desc:"Mix de 6 postres miniatura perfectos para compartir.", price:"Q 180", original:"Q 220", img:"🎁" },
+];
+
+// ─── STATE ──────────────────────────────
+let cart = {};
+let reviews = JSON.parse(localStorage.getItem('da-reviews') || '[]');
+let isAdmin = false;
+let currentRating = 0;
+let toastTimer = null;
+
+// Seed reviews
+if (reviews.length === 0) {
+  reviews = [];
+}
+
+// ─── INIT ───────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  renderMenu();
+  renderPromos();
+  renderReviews();
+  initShareLinks();
+  initScrollObserver();
+  initNavbarScroll();
+});
+
+// ─── MENU ───────────────────────────────
+function renderMenu() {
+  const grid = document.getElementById('menu-grid');
+  grid.innerHTML = MENU.map(item => `
+    <div class="fade-in bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+      <div class="h-36 flex items-center justify-center text-6xl bg-gradient-to-br from-pink-50 to-amber-50">${item.emoji}</div>
+      <div class="p-5">
+        <h3 class="font-serif text-lg font-semibold mb-1">${item.name}</h3>
+        <p class="text-gray-500 text-sm mb-4">${item.desc}</p>
+        <div class="flex items-center justify-between">
+          <span class="font-sans font-bold text-primary text-lg">Q ${item.price}</span>
+          <div class="flex items-center gap-2">
+            <button onclick="removeFromCart('${item.name}')" class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition-colors text-lg font-bold">−</button>
+            <span id="qty-${item.name.replace(/\s/g,'-')}" class="w-6 text-center font-semibold text-sm">0</span>
+            <button onclick="addToCart('${item.name}',${item.price})" class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center hover:bg-pink-700 transition-colors text-lg font-bold">+</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── PROMOS ─────────────────────────────
+function renderPromos() {
+  const grid = document.getElementById('promo-grid');
+  grid.innerHTML = PROMOS.map(p => `
+    <div class="fade-in bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-gray-100">
+      <div class="text-4xl mb-4">${p.img}</div>
+      <span class="text-xs font-semibold bg-primary/10 text-primary rounded-full px-3 py-1">${p.badge}</span>
+      <h3 class="font-serif text-xl font-semibold mt-3 mb-2">${p.title}</h3>
+      <p class="text-gray-500 text-sm mb-4">${p.desc}</p>
+      <div class="flex items-center gap-3 mb-5">
+        <span class="font-sans font-bold text-2xl text-primary">${p.price}</span>
+        <span class="font-sans text-gray-400 line-through text-sm">${p.original}</span>
+      </div>
+      <a href="https://wa.me/50254895074?text=${encodeURIComponent('Hola! Me interesa la promoción: ' + p.title)}" target="_blank"
+        class="flex items-center justify-center gap-2 w-full bg-[#25D366] text-white rounded-xl py-2.5 font-semibold hover:bg-green-600 transition-colors text-sm">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Consultar oferta
+      </a>
+    </div>
+  `).join('');
+}
+
+// ─── CART ───────────────────────────────
+function addToCart(name, price) {
+  if (!cart[name]) cart[name] = { price, qty: 0 };
+  cart[name].qty++;
+  updateCartUI();
+  updateQtyDisplay(name);
+}
+function removeFromCart(name) {
+  if (cart[name] && cart[name].qty > 0) {
+    cart[name].qty--;
+    if (cart[name].qty === 0) delete cart[name];
+  }
+  updateCartUI();
+  updateQtyDisplay(name);
+}
+function updateQtyDisplay(name) {
+  const el = document.getElementById('qty-' + name.replace(/\s/g, '-'));
+  if (el) el.textContent = cart[name] ? cart[name].qty : 0;
+}
+function updateCartUI() {
+  const total = Object.values(cart).reduce((s, i) => s + i.price * i.qty, 0);
+  const count = Object.values(cart).reduce((s, i) => s + i.qty, 0);
+  const badge = document.getElementById('cart-badge');
+  if (count > 0) {
+    badge.classList.remove('hidden');
+    badge.textContent = count;
+    badge.classList.add('cart-badge');
+    setTimeout(() => badge.classList.remove('cart-badge'), 200);
+  } else {
+    badge.classList.add('hidden');
+  }
+  document.getElementById('cart-total').textContent = 'Q ' + total.toFixed(2);
+  const items = document.getElementById('cart-items');
+  const empty = document.getElementById('cart-empty');
+  const footer = document.getElementById('cart-footer');
+  if (count === 0) {
+    items.innerHTML = '';
+    empty.classList.remove('hidden');
+    footer.classList.add('hidden');
+  } else {
+    empty.classList.add('hidden');
+    footer.classList.remove('hidden');
+    items.innerHTML = Object.entries(cart).map(([name, {price, qty}]) => `
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex-1">
+          <p class="font-medium text-sm">${name}</p>
+          <p class="font-sans text-primary text-sm font-semibold">Q ${(price*qty).toFixed(2)}</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="removeFromCart('${name}')" class="w-7 h-7 rounded-full border border-gray-200 text-gray-500 flex items-center justify-center hover:bg-gray-50 font-bold">−</button>
+          <span class="w-5 text-center text-sm font-semibold">${qty}</span>
+          <button onclick="addToCart('${name}',${price})" class="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center hover:bg-pink-700 font-bold">+</button>
+        </div>
+      </div>
+    `).join('<hr class="border-gray-100"/>');
+  }
+}
+function toggleCart() {
+  const el = document.getElementById('cart-overlay');
+  el.classList.toggle('hidden');
+  updateCartUI();
+}
+function orderViaWhatsApp() {
+  const lines = Object.entries(cart).map(([name,{price,qty}]) => `• ${qty}x ${name} – Q${(price*qty).toFixed(2)}`).join('\n');
+  const total = Object.values(cart).reduce((s,i)=>s+i.price*i.qty,0);
+  const msg = `¡Hola Dolce Aroma! 🍰 Quiero hacer un pedido:\n\n${lines}\n\n*Total: Q${total.toFixed(2)}*`;
+  window.open('https://wa.me/50254895074?text=' + encodeURIComponent(msg), '_blank');
+}
+
+// ─── REVIEWS ────────────────────────────
+function saveReviews() { localStorage.setItem('da-reviews', JSON.stringify(reviews)); }
+function renderReviews() {
+  const list = document.getElementById('reviews-list');
+  const empty = document.getElementById('no-reviews');
+  if (reviews.length === 0) {
+    list.innerHTML = '';
+    empty.classList.remove('hidden');
+    return;
+  }
+  empty.classList.add('hidden');
+  list.innerHTML = reviews.map(r => `
+    <div class="bg-cream rounded-2xl p-5 relative fade-in">
+      ${isAdmin ? `<button onclick="deleteReview(${r.id})" class="absolute top-3 right-3 w-7 h-7 flex items-center justify-center rounded-full bg-red-100 text-red-500 hover:bg-red-200 transition-colors text-xs font-bold" title="Eliminar">✕</button>` : ''}
+      <div class="flex items-center gap-3 mb-3">
+        <div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center font-semibold text-sm">${r.name.charAt(0)}</div>
+        <div>
+          <p class="font-semibold text-sm">${r.name}</p>
+          <div class="flex gap-0.5">${'★'.repeat(r.rating)}<span class="text-gray-200">${'★'.repeat(5-r.rating)}</span></div>
+        </div>
+      </div>
+      <p class="text-gray-600 text-sm leading-relaxed">${r.comment}</p>
+    </div>
+  `).join('');
+  // Re-apply star colors
+  list.querySelectorAll('.flex.gap-0\\.5').forEach(el => {
+    const filled = el.querySelectorAll('span:not(.text-gray-200)');
+    filled.forEach(s => s.style.color = '#f59e0b');
+  });
+  // Fix star rendering
+  list.querySelectorAll('.flex.gap-0\\.5').forEach(el => {
+    el.innerHTML = el.innerHTML.replace(/★/g, '<span style="color:#f59e0b">★</span>');
+  });
+  initScrollObserver();
+}
+function deleteReview(id) {
+  reviews = reviews.filter(r => r.id !== id);
+  saveReviews();
+  renderReviews();
+  showToast('Reseña eliminada');
+}
+function setRating(v) {
+  currentRating = v;
+  document.querySelectorAll('.star-btn').forEach(btn => {
+    const bv = parseInt(btn.dataset.v);
+    btn.style.color = bv <= v ? '#f59e0b' : '#d1d5db';
+  });
+}
+function submitReview() {
+  const name = document.getElementById('review-name').value.trim();
+  const comment = document.getElementById('review-comment').value.trim();
+  if (!name) { showToast('Por favor ingresa tu nombre'); return; }
+  if (!currentRating) { showToast('Selecciona una calificación'); return; }
+  if (!comment) { showToast('Escribe un comentario'); return; }
+  const id = Date.now();
+  reviews.unshift({ id, name, rating: currentRating, comment });
+  saveReviews();
+  renderReviews();
+  document.getElementById('review-name').value = '';
+  document.getElementById('review-comment').value = '';
+  currentRating = 0;
+  setRating(0);
+  showToast('¡Gracias por tu reseña!');
+  document.getElementById('resenas').scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+// ─── ADMIN ──────────────────────────────
+function openAdminModal() {
+  document.getElementById('admin-overlay').classList.remove('hidden');
+  document.getElementById('admin-overlay').style.display = 'flex';
+  if (isAdmin) {
+    document.getElementById('admin-login-view').classList.add('hidden');
+    document.getElementById('admin-logged-view').classList.remove('hidden');
+  } else {
+    document.getElementById('admin-login-view').classList.remove('hidden');
+    document.getElementById('admin-logged-view').classList.add('hidden');
+  }
+}
+function closeAdminModal() {
+  document.getElementById('admin-overlay').style.display = 'none';
+  document.getElementById('admin-overlay').classList.add('hidden');
+}
+function doAdminLogin() {
+  const user = document.getElementById('admin-user').value;
+  const pass = document.getElementById('admin-pass').value;
+  if (user === 'Dolce_Aroma' && pass === 'Aroma502') {
+    isAdmin = true;
+    document.getElementById('admin-login-view').classList.add('hidden');
+    document.getElementById('admin-logged-view').classList.remove('hidden');
+    document.getElementById('admin-error').classList.add('hidden');
+    renderReviews();
+    showToast('Modo admin activado');
+  } else {
+    document.getElementById('admin-error').classList.remove('hidden');
+  }
+}
+function doAdminLogout() {
+  isAdmin = false;
+  closeAdminModal();
+  renderReviews();
+  showToast('Sesión cerrada');
+}
+
+// ─── SHARE ──────────────────────────────
+function initShareLinks() {
+  const url = window.location.href;
+  const text = 'Descubre Dolce Aroma Repostería Profesional, los mejores postres artesanales de Guatemala.';
+  document.getElementById('share-facebook').href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+  document.getElementById('share-whatsapp').href = 'https://wa.me/?text=' + encodeURIComponent(text + ' ' + url);
+}
+function shareInstagram() {
+  const url = window.location.href;
+  const text = 'Descubre Dolce Aroma Repostería Profesional, los mejores postres artesanales de Guatemala.';
+  if (navigator.share) {
+    navigator.share({ title:'Dolce Aroma', text, url }).catch(()=>{});
+  } else {
+    const el = document.createElement('textarea');
+    el.value = url; el.style.position = 'fixed'; el.style.opacity = '0';
+    document.body.appendChild(el); el.focus(); el.select();
+    document.execCommand('copy'); document.body.removeChild(el);
+    document.getElementById('ig-label').textContent = '¡Copiado!';
+    setTimeout(() => document.getElementById('ig-label').textContent = 'Instagram', 2500);
+  }
+}
+function copyLink() {
+  const url = window.location.href;
+  const done = () => {
+    document.getElementById('copy-label').textContent = 'Copiado';
+    document.getElementById('copy-icon').innerHTML = '<polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>';
+    setTimeout(() => {
+      document.getElementById('copy-label').textContent = 'Enlace';
+      document.getElementById('copy-icon').innerHTML = '<path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" fill="none"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" fill="none"/>';
+    }, 2500);
+  };
+  if (navigator.clipboard) { navigator.clipboard.writeText(url).then(done).catch(()=>done()); }
+  else {
+    const el = document.createElement('textarea'); el.value = url;
+    el.style.position='fixed'; el.style.opacity='0';
+    document.body.appendChild(el); el.focus(); el.select();
+    document.execCommand('copy'); document.body.removeChild(el); done();
+  }
+}
+
+// ─── TOAST ──────────────────────────────
+function showToast(msg) {
+  clearTimeout(toastTimer);
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.remove('hidden');
+  toastTimer = setTimeout(() => t.classList.add('hidden'), 2500);
+}
+
+// ─── SCROLL OBSERVER ────────────────────
+function initScrollObserver() {
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+}
+
+// ─── NAVBAR SCROLL ──────────────────────
+function initNavbarScroll() {
+  window.addEventListener('scroll', () => {
+    const nav = document.getElementById('navbar');
+    if (window.scrollY > 20) {
+      nav.classList.add('shadow-md');
+    } else {
+      nav.classList.remove('shadow-md');
+    }
+  });
+}
+
+// Close modals on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeAdminModal();
+    document.getElementById('cart-overlay').classList.add('hidden');
+  }
+});
+</script>
+</body>
+</html>
